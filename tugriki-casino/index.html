@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b0a14">
+<title>LoseLine — игры на виртуальные тугрики</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <button class="icon-btn hidden" id="backBtn" aria-label="Назад">←</button>
+    <div class="brand" id="brand">🎮 LoseLine</div>
+    <div class="balance-pill" id="balancePill">
+      <span class="coin">🪙</span>
+      <span data-balance>0</span>
+    </div>
+    <button class="icon-btn sound-btn" id="soundBtn" aria-label="Звук" title="Звук">🔊</button>
+  </header>
+
+  <!-- ================= МЕНЮ ================= -->
+  <main id="screen-menu" class="screen active">
+    <div class="hero">
+      <div class="hero-glow"></div>
+      <h1>LoseLine</h1>
+      <p class="sub">Игры и аркады на виртуальные тугрики. Никаких реальных денег и звёзд.</p>
+    </div>
+
+    <div class="games">
+      <button class="game-card gc-slots" data-game="slots">
+        <span class="gc-emoji">🏺</span>
+        <span class="gc-title">Пирамида удачи</span>
+        <span class="gc-desc">5 барабанов · 20 линий · фриспины</span>
+        <span class="gc-play">Играть →</span>
+      </button>
+
+      <button class="game-card gc-roulette" data-game="roulette">
+        <span class="gc-emoji">🎡</span>
+        <span class="gc-title">Рулетка</span>
+        <span class="gc-desc">Красное / чёрное · зеро · чёт/нечет</span>
+        <span class="gc-play">Играть →</span>
+      </button>
+
+      <button class="game-card gc-blackjack" data-game="blackjack">
+        <span class="gc-emoji">🃏</span>
+        <span class="gc-title">Блэкджек</span>
+        <span class="gc-desc">21 · дилер стоит на 17 · BJ платит 3:2</span>
+        <span class="gc-play">Играть →</span>
+      </button>
+
+      <button class="game-card gc-poker" data-game="poker">
+        <span class="gc-emoji">♠️</span>
+        <span class="gc-title">Холдем</span>
+        <span class="gc-desc">Техасский холдем · блайнды · без лимита · туториал</span>
+        <span class="gc-play">Играть →</span>
+      </button>
+
+      <button class="game-card gc-runner" data-game="runner">
+        <span class="gc-emoji">🏃</span>
+        <span class="gc-title">Побег по крышам</span>
+        <span class="gc-desc">3 полосы · монеты · временные ×2 / ×3 / ×5 / ×10</span>
+        <span class="gc-play">Бежать →</span>
+      </button>
+
+      <button class="game-card gc-esports" data-game="esports">
+        <span class="gc-emoji">🎮</span>
+        <span class="gc-title">Киберспорт</span>
+        <span class="gc-desc">Dota 2 и CS2 · ставки на команды · трансляции</span>
+        <span class="gc-play">Смотреть →</span>
+      </button>
+    </div>
+
+    <div class="menu-actions">
+      <button class="ghost-btn" id="bonusBtn">🎁 Бонус: 1 000 000 – 100 000 000</button>
+      <button class="ghost-btn" data-game="bank">🏦 Банк</button>
+      <button class="ghost-btn" data-game="promo">🎟️ Промокод</button>
+      <button class="ghost-btn wide" id="legalBtn">📄 Условия и конфиденциальность</button>
+      <button class="ghost-btn wide hidden" id="adminBtn" data-game="admin">🛡️ Админ-панель</button>
+    </div>
+
+    <p class="disclaimer">
+      Тугрики — игровая валюта без денежной ценности. Их нельзя купить, продать,
+      передать или обменять; нарушение ведёт к бану. Приложение не принимает платежи
+      и не использует Telegram Stars. 18+.
+    </p>
+  </main>
+
+  <!-- ================= СЛОТЫ ================= -->
+  <main id="screen-slots" class="screen">
+    <div class="game-head">
+      <h2>🏺 Пирамида удачи</h2>
+      <p class="hint">20 линий · 🏺 заменяет любые символы · 🪲 ×3 даёт 10 фриспинов</p>
+    </div>
+
+    <div class="slot-machine" id="slotMachine">
+      <div class="machine-top">
+        <div class="machine-title">Пирамида удачи</div>
+        <div class="machine-meters">
+          <div class="meter"><span>СТАВКА</span><b><i id="slotBetLabel">100</i> 🪙</b></div>
+          <div class="meter win"><span>ВЫИГРЫШ</span><b><i id="slotWinValue">0</i> 🪙</b></div>
+        </div>
+      </div>
+      <div class="free-banner hidden" id="freeBanner">
+        ФРИСПИНЫ: <b id="freeLeft">0</b> · выигрыш ×2
+      </div>
+      <div class="reels-frame" id="reelsFrame">
+        <div class="reels" id="reels"></div>
+        <svg class="paylines-svg" id="paylines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="reels-shine"></div>
+      </div>
+      <div class="slot-status" id="slotStatus">Выбери ставку и крути</div>
+    </div>
+
+    <div class="action-row">
+      <div class="bet-control" id="slotsBet">
+        <button class="bc-btn" data-act="dec" aria-label="Уменьшить">−</button>
+        <div class="bc-value"><input class="bc-input" data-bet-input type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="100" aria-label="Ставка в тугриках"><small>тугриков</small></div>
+        <button class="bc-btn" data-act="inc" aria-label="Увеличить">+</button>
+        <button class="bc-btn bc-max" data-act="max">MAX</button>
+      </div>
+      <button class="primary-btn" id="spinBtn">КРУТИТЬ</button>
+    </div>
+
+    <div class="auto-row">
+      <button class="secondary-btn wide auto-btn" id="autoSpinBtn">♾️ АВТО-ПРОКРУТКА</button>
+    </div>
+
+    <details class="paytable">
+      <summary>Таблица выплат (за линию)</summary>
+      <div id="paytableList" class="paytable-grid"></div>
+      <p class="paytable-note">Выплаты указаны множителем к ставке на линию (общая ставка / 20).</p>
+    </details>
+  </main>
+
+  <!-- ================= РУЛЕТКА ================= -->
+  <main id="screen-roulette" class="screen">
+    <div class="game-head">
+      <h2>🎡 Рулетка</h2>
+      <p class="hint">37 чисел (0–36) · красное/чёрное и чёт/нечет платят 1:1 · зеро 35:1</p>
+    </div>
+
+    <div class="wheel-wrap">
+      <div class="wheel-pointer"></div>
+      <div class="wheel-rotor" id="wheelRotor">
+        <svg id="wheelSvg" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
+      </div>
+      <div class="wheel-result" id="wheelResult">—</div>
+    </div>
+
+    <div class="bet-control roulette-bet" id="rouletteBet">
+      <button class="bc-btn" data-act="dec" aria-label="Уменьшить">−</button>
+      <div class="bc-value"><input class="bc-input" data-bet-input type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="50" aria-label="Сумма ставки в тугриках"><small>на ставку</small></div>
+      <button class="bc-btn" data-act="inc" aria-label="Увеличить">+</button>
+      <button class="bc-btn bc-max" data-act="max">MAX</button>
+    </div>
+
+    <div class="chips" id="chips"></div>
+    <div class="bets-grid" id="betsGrid"></div>
+
+    <div class="bet-summary">
+      <span>Всего поставлено: <b id="rouletteTotal">0</b> 🪙</span>
+      <button class="link-btn" id="clearBets">Очистить</button>
+    </div>
+
+    <button class="primary-btn wide" id="spinRoulette">КРУТИТЬ</button>
+  </main>
+
+  <!-- ================= БЛЭКДЖЕК ================= -->
+  <main id="screen-blackjack" class="screen">
+    <div class="game-head">
+      <h2>🃏 Блэкджек</h2>
+      <p class="hint">6 колод · дилер стоит на 17 · блэкджек 3:2 · удвоение на первых двух картах</p>
+    </div>
+
+    <div class="table">
+      <div class="hand-block">
+        <div class="hand-label">Дилер <span id="dealerScore" class="score"></span></div>
+        <div class="cards" id="dealerCards"></div>
+      </div>
+      <div class="table-center" id="bjStatus">Сделай ставку и нажми «Раздать»</div>
+      <div class="hand-block">
+        <div class="hand-label">Ты <span id="playerScore" class="score"></span></div>
+        <div class="cards" id="playerCards"></div>
+      </div>
+    </div>
+
+    <div class="action-row" id="bjBetRow">
+      <div class="bet-control" id="bjBet">
+        <button class="bc-btn" data-act="dec" aria-label="Уменьшить">−</button>
+        <div class="bc-value"><input class="bc-input" data-bet-input type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="100" aria-label="Ставка в тугриках"><small>тугриков</small></div>
+        <button class="bc-btn" data-act="inc" aria-label="Увеличить">+</button>
+        <button class="bc-btn bc-max" data-act="max">MAX</button>
+      </div>
+      <button class="primary-btn" id="dealBtn">РАЗДАТЬ</button>
+    </div>
+
+    <div class="action-row hidden" id="bjPlayRow">
+      <button class="primary-btn" id="hitBtn">ЕЩЁ</button>
+      <button class="secondary-btn" id="standBtn">ХВАТИТ</button>
+      <button class="secondary-btn" id="doubleBtn">УДВОИТЬ</button>
+    </div>
+  </main>
+
+  <!-- ================= ПОКЕР ================= -->
+  <main id="screen-poker" class="screen">
+    <div class="game-head">
+      <h2>♠️ Техасский холдем</h2>
+      <p class="hint">Хедз-ап против дилера · блайнды · флоп, тёрн, ривер · без верхнего лимита</p>
+    </div>
+
+    <div class="table poker-table">
+      <div class="hand-block">
+        <div class="hand-label">Дилер <span id="pokerDealerHand" class="score"></span></div>
+        <div class="cards" id="pokerDealerCards"></div>
+      </div>
+
+      <div class="poker-pot-row">
+        <span>БАНК</span><b id="pokerPot">0 🪙</b>
+      </div>
+
+      <div class="hand-label poker-community-label">ОБЩИЕ КАРТЫ</div>
+      <div class="cards poker-community" id="pokerCommunity"></div>
+
+      <div class="table-center" id="pokerStatus">Выбери большой блайнд и нажми «Раздать»</div>
+
+      <div class="poker-stacks">
+        <span>Твой баланс: <b id="pokerMyStack">0</b> 🪙</span>
+        <span>Твоя ставка: <b id="pokerMyBet">0</b> 🪙</span>
+        <span>Ставка дилера: <b id="pokerDealerBet">0</b> 🪙</span>
+      </div>
+
+      <div class="hand-block">
+        <div class="hand-label">Ты <span id="pokerPlayerHand" class="score"></span></div>
+        <div class="cards poker-hand" id="pokerPlayerCards"></div>
+      </div>
+    </div>
+
+    <div class="action-row" id="pokerBetRow">
+      <div class="bet-control" id="pokerBet">
+        <button class="bc-btn" data-act="dec" aria-label="Уменьшить">−</button>
+        <div class="bc-value"><input class="bc-input" data-bet-input type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="100" aria-label="Большой блайнд в тугриках"><small>большой блайнд</small></div>
+        <button class="bc-btn" data-act="inc" aria-label="Увеличить">+</button>
+        <button class="bc-btn bc-max" data-act="max">MAX</button>
+      </div>
+      <button class="primary-btn" id="pokerDealBtn">РАЗДАТЬ</button>
+    </div>
+
+    <div class="poker-play hidden" id="pokerPlayRow">
+      <div class="poker-actions">
+        <button class="primary-btn" id="pokerCallBtn">ЧЕК</button>
+        <button class="secondary-btn" id="pokerFoldBtn">ФОЛД</button>
+        <button class="ghost-btn" id="pokerAllInBtn">ОЛЛ-ИН</button>
+      </div>
+      <div class="poker-raise-row">
+        <input id="pokerRaiseInput" class="poker-raise-input" type="text" inputmode="numeric"
+               autocomplete="off" spellcheck="false" value="200" aria-label="Рейз до">
+        <button class="secondary-btn" id="pokerRaiseBtn">РЕЙЗ</button>
+      </div>
+      <p class="hint poker-raise-hint">Сумма в поле — до какой ставки в этом круге ты повышаешь.</p>
+    </div>
+
+    <div class="action-row">
+      <button class="ghost-btn" id="pokerHelpBtn">📖 Как играть</button>
+      <button class="ghost-btn hidden" id="pokerAgainBtn">Играть ещё</button>
+    </div>
+
+    <p class="hint poker-tip" id="pokerTip">Тебя ждут блайнды, четыре круга торговли и пять общих карт. Нажми «Раздать».</p>
+
+    <div class="poker-help hidden" id="pokerHelp">
+      <div class="poker-help-card">
+        <div class="poker-help-head">
+          <b>📖 Как играть в техасский холдем</b>
+          <button class="icon-btn" id="pokerHelpClose" aria-label="Закрыть">✕</button>
+        </div>
+        <p><b>1. Блайнды.</b> Ты ставишь большой блайнд — свою ставку. Дилер ставит малый блайнд, половину. Эти тугрики сразу уходят в банк.</p>
+        <p><b>2. Раздача.</b> У тебя и у дилера по 2 закрытые карты. Затем на стол выкладываются 5 общих карт: флоп (3), тёрн (1), ривер (1).</p>
+        <p><b>3. Торговля.</b> Перед каждой улицей — круг ставок: чек, колл, рейз или фолд. Верхнего лимита рейза нет: можно повышать до всего баланса.</p>
+        <p><b>4. Комбинация.</b> Собери лучшую пятёрку из 7 карт: 2 своих + 5 общих. Побеждает старшая комбинация; при равенстве банк делится.</p>
+        <p><b>5. Дилер</b> играет по простой стратегии, иногда блефует и иногда сбрасывает. Все ставки — только виртуальные тугрики.</p>
+        <div class="poker-hands">
+          <span>Стрит-флеш</span><span>Каре</span><span>Фулл-хаус</span><span>Флеш</span><span>Стрит</span><span>Сет</span><span>Две пары</span><span>Пара</span><span>Старшая карта</span>
+        </div>
+        <p class="hint">Туз может быть старшим (A-K-Q-J-10) или младшим (A-2-3-4-5) в стрите. Масти сами по себе не сравниваются — только комбинация и старшинство карт.</p>
+        <button class="primary-btn" id="pokerHelpOk">ПОНЯТНО</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= БАНК ================= -->
+  <main id="screen-bank" class="screen">
+    <div class="game-head">
+      <h2>🏦 Банк</h2>
+      <p class="hint">Сложи тугрики в банк — там они в безопасности и не участвуют в ставках.</p>
+    </div>
+
+    <div class="bank-card">
+      <div class="bank-row"><span>В банке</span><b id="bankBalance">0 🪙</b></div>
+      <div class="bank-row"><span>На руках</span><b id="bankWallet">0 🪙</b></div>
+    </div>
+
+    <label class="bank-label" for="bankAmount">Сумма</label>
+    <input id="bankAmount" class="bank-input" type="text" inputmode="numeric"
+           autocomplete="off" spellcheck="false" placeholder="0" aria-label="Сумма для банка">
+
+    <div class="bank-actions">
+      <button class="primary-btn" id="bankDeposit">ПОЛОЖИТЬ</button>
+      <button class="secondary-btn" id="bankWithdraw">СНЯТЬ</button>
+    </div>
+    <div class="bank-actions">
+      <button class="ghost-btn" id="bankAllIn">Всё в банк</button>
+      <button class="ghost-btn" id="bankAllOut">Забрать всё</button>
+    </div>
+
+    <p class="hint bank-status" id="bankStatus">Тугрики в банке сохраняются и не тратятся на ставки.</p>
+  </main>
+
+  <!-- ================= ПРОМОКОДЫ ================= -->
+  <main id="screen-promo" class="screen">
+    <div class="game-head">
+      <h2>🎟️ Промокоды</h2>
+      <p class="hint">Каждый код даёт 30 000 000 тугриков. Один код — одна активация на всех.</p>
+    </div>
+
+    <div class="bank-card">
+      <div class="bank-row"><span>Ты активировал</span><b id="promoUsed">0 / 60</b></div>
+      <div class="bank-row"><span>Активировано всего</span><b id="promoGlobal">—</b></div>
+      <div class="bank-row"><span>Получено</span><b id="promoTotal">0 🪙</b></div>
+    </div>
+
+    <div class="promo-form">
+      <input id="promoInput" class="promo-input" type="text" maxlength="32"
+             autocomplete="off" autocapitalize="characters" spellcheck="false"
+             placeholder="LOSE-30M-XXXXX" aria-label="Промокод">
+      <button class="primary-btn" id="promoBtn">АКТИВИРОВАТЬ</button>
+    </div>
+    <p class="hint promo-status" id="promoStatus">Введи промокод и нажми «Активировать».</p>
+  </main>
+
+  <!-- ================= РАННЕР ================= -->
+  <main id="screen-runner" class="screen">
+    <div class="game-head">
+      <h2>🏃 Побег по крышам</h2>
+      <p class="hint">Три полосы · прыгай и подкатывайся · собирай монеты и временные множители до ×10</p>
+    </div>
+
+    <div class="runner-hud">
+      <div class="runner-stat"><span>ДИСТАНЦИЯ</span><b id="runnerDist">0 м</b></div>
+      <div class="runner-stat runner-stat-mult"><span>МНОЖИТЕЛЬ</span><b id="runnerMult">×1</b></div>
+      <div class="runner-stat"><span>ЗАРАБОТАНО</span><b id="runnerEarn">0 🪙</b></div>
+    </div>
+
+    <div class="runner-stage" id="runnerStage">
+      <canvas id="runnerCanvas" aria-label="Игровое поле раннера"></canvas>
+      <div class="runner-mult-badge hidden" id="runnerMultBadge">×2 <i>0.0 с</i></div>
+      <div class="runner-overlay" id="runnerOverlay">
+        <div class="runner-overlay-card">
+          <div class="runner-overlay-emoji">🏃</div>
+          <h3 id="runnerOverlayTitle">Побег по крышам</h3>
+          <p id="runnerOverlayText">Собирай монеты, перепрыгивай барьеры, подкатывайся под перекладины и меняй полосу. Множители ×2 / ×3 / ×5 / ×10 действуют ограниченное время.</p>
+          <div class="runner-overlay-actions">
+            <button class="primary-btn" id="runnerStartBtn">НАЧАТЬ БЕГ</button>
+            <button class="secondary-btn hidden" id="runnerResumeBtn">ПРОДОЛЖИТЬ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="hint runner-swipe-hint">
+      📱 Води пальцем прямо по полю: влево/вправо — смена полосы, вверх — прыжок, вниз — подкат.
+    </p>
+
+    <div class="runner-controls">
+      <button class="runner-ctrl" data-runner-act="left" aria-label="Влево">◀</button>
+      <button class="runner-ctrl" data-runner-act="jump" aria-label="Прыжок">⬆</button>
+      <button class="runner-ctrl" data-runner-act="slide" aria-label="Подкат">⬇</button>
+      <button class="runner-ctrl" data-runner-act="right" aria-label="Вправо">▶</button>
+    </div>
+
+    <div class="runner-actions">
+      <button class="ghost-btn" id="runnerPauseBtn">⏸ Пауза</button>
+      <button class="ghost-btn" id="runnerQuitBtn">В меню</button>
+    </div>
+
+    <p class="hint runner-note">
+      Все собранные монеты автоматически переводятся на баланс. Если выйдешь с экрана или свернёшь Telegram,
+      забег встанет на паузу, а заработок сохранится.
+    </p>
+  </main>
+
+  <!-- ================= АДМИН-ПАНЕЛЬ ================= -->
+  <main id="screen-admin" class="screen">
+    <div class="game-head">
+      <h2>🛡️ Админ-панель</h2>
+      <p class="hint">Управление банами игроков. Доступ — только для @gusisurkovuch.</p>
+    </div>
+
+    <div id="adminAccess" class="admin-access hidden">
+      <div class="admin-access-card">
+        <b>🔒 Нет доступа</b>
+        <p>Эта панель открывается только из Telegram под аккаунтом <b>@gusisurkovuch</b>.</p>
+      </div>
+    </div>
+
+    <div id="adminPanel">
+      <div class="bank-card">
+        <div class="bank-row"><span>Твой аккаунт</span><b id="adminAccount">—</b></div>
+        <div class="bank-row"><span>Облако</span><b id="adminCloudState">—</b></div>
+      </div>
+
+      <label class="bank-label" for="adminTarget">@USERNAME ИЛИ TELEGRAM ID</label>
+      <input id="adminTarget" class="bank-input" type="text" maxlength="32"
+             autocomplete="off" autocapitalize="none" spellcheck="false"
+             placeholder="@username или 123456789" aria-label="Кого забанить">
+
+      <label class="bank-label" for="adminReason">ПРИЧИНА (НЕОБЯЗАТЕЛЬНО)</label>
+      <input id="adminReason" class="bank-input" type="text" maxlength="160"
+             autocomplete="off" spellcheck="false"
+             placeholder="Например: оскорбления в чате" aria-label="Причина бана">
+
+      <div class="bank-actions">
+        <button class="primary-btn" id="adminBan">ЗАБАНИТЬ</button>
+        <button class="secondary-btn" id="adminUnban">РАЗБАНИТЬ</button>
+      </div>
+
+      <div class="admin-list-head">
+        <span>ЗАБАНЕННЫЕ</span>
+        <button class="link-btn" id="adminRefresh">↻ Обновить</button>
+      </div>
+      <div class="admin-list" id="adminBanList"></div>
+      <p class="hint admin-status" id="adminStatus">Введи @username или Telegram ID и нажми «Забанить».</p>
+
+      <div class="admin-list-head">
+        <span>ИГРОКИ · ID И СТАТИСТИКА</span>
+        <button class="link-btn" id="adminPlayersRefresh">↻ Обновить</button>
+      </div>
+      <p class="hint admin-privacy-note">В облаке ID, @username и причины банов хранятся псевдонимно: ключи — хеши, служебные поля обфусцированы. Открытые данные видит только админ в этой панели.</p>
+      <div class="admin-list admin-players" id="adminPlayerList"></div>
+      <p class="hint admin-status" id="adminPlayersStatus">Список игроков загружается из облака.</p>
+    </div>
+  </main>
+
+  <!-- ================= КИБЕРСПОРТ ================= -->
+  <main id="screen-esports" class="screen">
+    <div class="game-head">
+      <h2>🎮 Киберспорт</h2>
+      <p class="hint">Актуальные матчи Dota 2 и CS2 · ставки виртуальными тугриками · трансляции</p>
+    </div>
+
+    <div class="es-tabs" id="esTabs" role="tablist" aria-label="Игры киберспорта">
+      <button class="es-tab active" data-es="dota2" role="tab" aria-selected="true">
+        <b>🛡️</b><span>Dota 2</span>
+      </button>
+      <button class="es-tab" data-es="cs2" role="tab" aria-selected="false">
+        <b>🔫</b><span>CS2</span>
+      </button>
+    </div>
+
+    <div class="es-bar">
+      <span class="es-sync" id="esSync"><i></i><span>загрузка…</span></span>
+      <button class="link-btn" id="esRefresh">↻ Обновить</button>
+    </div>
+
+    <div class="es-list" id="esList"></div>
+    <div class="es-empty hidden" id="esEmpty">
+      Сегодня матчей не нашлось.<br><small>Загляни позже или обнови список.</small>
+    </div>
+
+    <div class="es-my-head">
+      <span>МОИ СТАВКИ</span>
+      <button class="link-btn" id="esSettleBtn">Проверить результаты</button>
+    </div>
+    <div class="es-bets" id="esBetList"></div>
+
+    <p class="es-note es-source">
+      Матчи и коэффициенты — публичный API bo3.gg. Трансляции открываются с Twitch/YouTube.
+      Ставки принимаются только на виртуальные тугрики. Тугрики не имеют денежной
+      ценности, не обмениваются на деньги и не являются призом.
+    </p>
+  </main>
+
+  <footer class="footer">
+    LoseLine · игры на виртуальные тугрики · 18+
+    <br>
+    <button class="link-btn footer-link" id="legalFooterBtn">Условия и конфиденциальность</button>
+  </footer>
+</div>
+
+<!-- Ставка на киберспорт -->
+<div class="es-modal hidden" id="esBetModal" aria-hidden="true">
+  <div class="es-modal-backdrop" data-es-close="bet"></div>
+  <div class="es-sheet" role="dialog" aria-modal="true" aria-labelledby="esSheetTitle">
+    <div class="es-sheet-grab"></div>
+    <div class="es-sheet-head">
+      <div>
+        <b id="esSheetTitle">Ставка</b>
+        <small id="esSheetSub"></small>
+      </div>
+      <button class="icon-btn es-close" data-es-close="bet" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="es-picks" id="esPicks"></div>
+    <div class="es-stake-box">
+      <input id="esStakeInput" class="es-stake-input" type="number" inputmode="numeric"
+             min="10" step="10" value="100" aria-label="Сумма ставки">
+      <button class="secondary-btn es-max" id="esStakeMax">MAX</button>
+    </div>
+    <div class="es-stake-chips" id="esStakeChips"></div>
+    <button class="primary-btn wide" id="esPlaceBet">ПОСТАВИТЬ</button>
+    <p class="es-note">Ставка списывается сразу. Выигрыш — сумма × коэффициент.
+      Если матч отменён, ставка вернётся на баланс.</p>
+  </div>
+</div>
+
+<!-- Трансляция матча -->
+<div class="es-modal hidden" id="esPlayerModal" aria-hidden="true">
+  <div class="es-modal-backdrop" data-es-close="player"></div>
+  <div class="es-player-card" role="dialog" aria-modal="true" aria-labelledby="esPlayerTitle">
+    <div class="es-player-head">
+      <div>
+        <b id="esPlayerTitle">Трансляция</b>
+        <small id="esPlayerSub"></small>
+      </div>
+      <button class="icon-btn es-close" data-es-close="player" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="es-player-frame" id="esPlayerFrame"></div>
+    <div class="es-player-links" id="esPlayerLinks"></div>
+  </div>
+</div>
+
+<div id="fxLayer" class="fx-layer" aria-hidden="true"></div>
+<div class="bigwin" id="bigwin" aria-hidden="true">
+  <div class="bigwin-title" id="bigwinTitle">BIG WIN</div>
+  <div class="bigwin-amount" id="bigwinAmount"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<div class="ban-overlay hidden" id="banOverlay" role="alertdialog" aria-modal="true" aria-labelledby="banTitle">
+  <div class="ban-card">
+    <div class="ban-emoji">🚫</div>
+    <h2 id="banTitle">Доступ заблокирован</h2>
+    <p class="ban-target" id="banTarget"></p>
+    <p class="ban-reason" id="banReason">Причина: —</p>
+    <p class="ban-note">Если считаешь блокировку ошибкой — напиши администратору @gusisurkovuch.</p>
+  </div>
+</div>
+
+<div class="legal-overlay hidden" id="legalOverlay" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
+  <div class="legal-card">
+    <div class="legal-head">
+      <b id="legalTitle">📄 Политика конфиденциальности и условия</b>
+      <button class="icon-btn hidden" id="legalClose" aria-label="Закрыть">✕</button>
+    </div>
+
+    <div class="legal-body">
+      <p class="legal-lead">LoseLine — бесплатные игры и аркады на виртуальные тугрики. 18+.</p>
+
+      <h3>Кто оператор</h3>
+      <p>Оператор — администратор LoseLine <b>@gusisurkovuch</b>. Это частный
+      немонетизированный проект: реальные деньги, Telegram Stars и платежи не
+      используются.</p>
+
+      <h3>Какие данные хранятся</h3>
+      <ul>
+        <li>Telegram ID и <b>@username</b> — чтобы один игровой аккаунт работал на телефоне и компьютере;</li>
+        <li>баланс, банк, время последнего бонуса и накопленная игровая статистика;</li>
+        <li>активации промокодов и записи о банах;</li>
+        <li>локально — настройки звука и факт согласия с этими условиями.</li>
+      </ul>
+
+      <h3>Зачем</h3>
+      <p>Только для работы игры: синхронизация кошелька, одноразовые промокоды,
+      бан-лист и поддержка игроков. Данные не продаются и не передаются
+      рекламным сетям.</p>
+
+      <h3>Где и как долго</h3>
+      <p>Кошелёк и общие записи хранятся в публичном сервисе <b>textdb.online</b>.
+      Ключи строятся от SHA-256 хеша ID, а служебные поля (ID, @username, причины
+      банов) не публикуются открытым текстом. Это псевдонимизация и обфускация,
+      а не абсолютная защита: TextDB публичный, а клиентский код можно изучить.
+      Данные хранятся, пока аккаунт активен; сервис может удалить неиспользуемые
+      записи после 30 дней без обращений. Локальная копия живёт до очистки данных
+      браузера/Telegram.</p>
+
+      <h3>Как удалить данные</h3>
+      <p>Напиши администратору <b>@gusisurkovuch</b> и укажи свой Telegram ID или
+      @username с просьбой об удалении. Мы удалим облачный кошелёк, аккаунт, записи
+      промокодов и бана в разумный срок (до 30 дней), если нет законных оснований
+      хранить их дальше. Локальные данные можно удалить очисткой данных браузера
+      или Telegram.</p>
+
+      <h3>Тугрики и запрет передачи</h3>
+      <p>Тугрики — <b>игровая валюта без денежной ценности</b>. Их нельзя продавать,
+      покупать, передавать, обменивать на деньги, товары или услуги, а также
+      использовать для любых расчётов вне игры. Нарушение этих правил ведёт к
+      блокировке аккаунта.</p>
+
+      <h3>18+ и важное ограничение</h3>
+      <p>Игра предназначена только для совершеннолетних. Здесь нет реальных ставок,
+      выигрышей и призов. Если игра перестаёт быть для тебя развлечением — сделай
+      перерыв.</p>
+    </div>
+
+    <div class="legal-checks">
+      <label class="legal-check"><input type="checkbox" id="legalAge"> <span>Мне исполнилось 18 лет.</span></label>
+      <label class="legal-check"><input type="checkbox" id="legalConsent"> <span>Я принимаю условия и политику конфиденциальности.</span></label>
+    </div>
+
+    <button class="primary-btn wide" id="legalAccept" disabled>ПРИНЯТЬ И ИГРАТЬ</button>
+    <p class="legal-note">Без обеих галочек игра недоступна.</p>
+  </div>
+</div>
+
+<script src="js/sound.js"></script>
+<script src="js/cloud.js"></script>
+<script src="js/app.js"></script>
+<script src="js/privacy.js"></script>
+<script src="js/slots.js"></script>
+<script src="js/roulette.js"></script>
+<script src="js/blackjack.js"></script>
+<script src="js/poker.js"></script>
+<script src="js/esports.js"></script>
+<script src="js/bank.js"></script>
+<script src="js/promo.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/runner.js"></script>
+</body>
+</html>
