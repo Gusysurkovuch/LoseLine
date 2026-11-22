@@ -11,14 +11,22 @@
 <script>
 /* Telegram кеширует Mini App по URL — принудительно обновляем версию. */
 (function () {
-  var V = '20261122c';
-  if (location.search.indexOf('v=' + V) === -1) {
-    location.replace(location.href.split('?')[0] + '?v=' + V + location.hash);
+  var V = '20261122f';
+  try {
+    var u = new URL(location.href);
+    if (u.searchParams.get('v') !== V) {
+      u.searchParams.set('v', V);
+      location.replace(u.toString());
+    }
+  } catch (e) {
+    if (location.search.indexOf('v=' + V) === -1) {
+      location.replace(location.href.split('?')[0] + '?v=' + V + location.hash);
+    }
   }
 })();
 </script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
-<link rel="stylesheet" href="css/style.css?v=20261122c">
+<link rel="stylesheet" href="css/style.css?v=20261122f">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
@@ -354,7 +362,7 @@
 
   <!-- ================= РАННЕР 3D ================= -->
   <main id="screen-runner" class="screen screen-runner3d">
-    <iframe id="runner3dFrame" src="runner3d.html?v=20261122c" title="Побег по крышам — 3D" allow="fullscreen"></iframe>
+    <iframe id="runner3dFrame" src="runner3d.html?v=20261122f" title="Побег по крышам — 3D" allow="fullscreen"></iframe>
     <p class="hint runner-note">
       Монеты автоматически переводятся на баланс. Свайпы: влево/вправо — полоса, вверх — прыжок, вниз — подкат.
     </p>
@@ -371,6 +379,7 @@
       <div class="admin-access-card">
         <b>🔒 Нет доступа</b>
         <p>Эта панель открывается только из Telegram под аккаунтом <b>@gusisurkovuch</b>.</p>
+        <button class="secondary-btn" id="adminRetryAccess" type="button">↻ Проверить доступ</button>
       </div>
     </div>
 
@@ -452,7 +461,7 @@
   </main>
 
   <footer class="footer">
-    LoseLine · игры на виртуальные тугрики · 18+ · v3D
+    LoseLine · игры на виртуальные тугрики · 18+ · v4FIX2
     <br>
     <button class="link-btn footer-link" id="legalFooterBtn">Условия и конфиденциальность</button>
   </footer>
@@ -582,18 +591,18 @@
   </div>
 </div>
 
-<script src="js/sound.js?v=20261122c"></script>
-<script src="js/cloud.js?v=20261122c"></script>
-<script src="js/app.js?v=20261122c"></script>
-<script src="js/privacy.js?v=20261122c"></script>
-<script src="js/slots.js?v=20261122c"></script>
-<script src="js/roulette.js?v=20261122c"></script>
-<script src="js/blackjack.js?v=20261122c"></script>
-<script src="js/poker.js?v=20261122c"></script>
-<script src="js/esports.js?v=20261122c"></script>
-<script src="js/bank.js?v=20261122c"></script>
-<script src="js/promo.js?v=20261122c"></script>
-<script src="js/admin.js?v=20261122c"></script>
-<script src="js/runner.js?v=20261122c"></script>
+<script src="js/sound.js?v=20261122f"></script>
+<script src="js/cloud.js?v=20261122f"></script>
+<script src="js/app.js?v=20261122f"></script>
+<script src="js/privacy.js?v=20261122f"></script>
+<script src="js/slots.js?v=20261122f"></script>
+<script src="js/roulette.js?v=20261122f"></script>
+<script src="js/blackjack.js?v=20261122f"></script>
+<script src="js/poker.js?v=20261122f"></script>
+<script src="js/esports.js?v=20261122f"></script>
+<script src="js/bank.js?v=20261122f"></script>
+<script src="js/promo.js?v=20261122f"></script>
+<script src="js/admin.js?v=20261122f"></script>
+<script src="js/runner.js?v=20261122f"></script>
 </body>
 </html>
