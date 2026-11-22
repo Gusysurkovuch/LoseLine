@@ -113,6 +113,12 @@
     border:1px solid rgba(140,110,220,.45); background:rgba(18,14,36,.82); color:#c9bff0;
     font-family:inherit; font-size:14px;
   }
+  .exitbtn{
+    position:absolute; top:70px; left:56px; z-index:5;
+    width:38px; height:34px; border-radius:11px; cursor:pointer; touch-action:manipulation;
+    border:1px solid rgba(140,110,220,.45); background:rgba(18,14,36,.82); color:#c9bff0;
+    font-family:inherit; font-size:14px;
+  }
 
   @media (hover:none) and (pointer:coarse){
     .controls{display:none}
@@ -139,6 +145,7 @@
 
   <div class="badge hidden" id="badge">×2 <i>0.0 с</i></div>
   <button class="pausebtn" id="pauseBtn" aria-label="Пауза">⏸</button>
+  <button class="exitbtn" id="exitBtn" aria-label="В меню">✕</button>
 
   <div class="legend">
     <div>🟧 барьер — <b>прыжок</b></div>
@@ -808,6 +815,11 @@ document.querySelectorAll('.ctrl').forEach((b) => {
 $('primary').addEventListener('click', (e) => { e.preventDefault(); startRun(); });
 $('resume').addEventListener('click', (e) => { e.preventDefault(); resumeRun(); });
 $('pauseBtn').addEventListener('click', (e) => { e.preventDefault(); pauseRun(); });
+$('exitBtn').addEventListener('click', (e) => {
+  e.preventDefault();
+  flush();
+  toParent('exit');
+});
 
 let sx = 0, sy = 0, dragging = false;
 viewport.addEventListener('touchstart', (e) => {
