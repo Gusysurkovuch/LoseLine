@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b0a14">
 <title>LoseLine — игры на виртуальные тугрики</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
-<link rel="stylesheet" href="css/style.css?v=20261111b">
+<link rel="stylesheet" href="css/style.css?v=20261122a">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
@@ -340,54 +340,11 @@
     <p class="hint promo-status" id="promoStatus">Введи промокод и нажми «Активировать».</p>
   </main>
 
-  <!-- ================= РАННЕР ================= -->
-  <main id="screen-runner" class="screen">
-    <div class="game-head">
-      <h2>🏃 Побег по крышам</h2>
-      <p class="hint">Три полосы · прыгай и подкатывайся · собирай монеты и временные множители до ×10</p>
-    </div>
-
-    <div class="runner-hud">
-      <div class="runner-stat"><span>ДИСТАНЦИЯ</span><b id="runnerDist">0 м</b></div>
-      <div class="runner-stat runner-stat-mult"><span>МНОЖИТЕЛЬ</span><b id="runnerMult">×1</b></div>
-      <div class="runner-stat"><span>ЗАРАБОТАНО</span><b id="runnerEarn">0 🪙</b></div>
-    </div>
-
-    <div class="runner-stage" id="runnerStage">
-      <canvas id="runnerCanvas" aria-label="Игровое поле раннера"></canvas>
-      <div class="runner-mult-badge hidden" id="runnerMultBadge">×2 <i>0.0 с</i></div>
-      <div class="runner-overlay" id="runnerOverlay">
-        <div class="runner-overlay-card">
-          <div class="runner-overlay-emoji">🏃</div>
-          <h3 id="runnerOverlayTitle">Побег по крышам</h3>
-          <p id="runnerOverlayText">Собирай монеты, перепрыгивай барьеры, подкатывайся под перекладины и меняй полосу. Множители ×2 / ×3 / ×5 / ×10 действуют ограниченное время.</p>
-          <div class="runner-overlay-actions">
-            <button class="primary-btn" id="runnerStartBtn">НАЧАТЬ БЕГ</button>
-            <button class="secondary-btn hidden" id="runnerResumeBtn">ПРОДОЛЖИТЬ</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <p class="hint runner-swipe-hint">
-      📱 Води пальцем прямо по полю: влево/вправо — смена полосы, вверх — прыжок, вниз — подкат.
-    </p>
-
-    <div class="runner-controls">
-      <button class="runner-ctrl" data-runner-act="left" aria-label="Влево">◀</button>
-      <button class="runner-ctrl" data-runner-act="jump" aria-label="Прыжок">⬆</button>
-      <button class="runner-ctrl" data-runner-act="slide" aria-label="Подкат">⬇</button>
-      <button class="runner-ctrl" data-runner-act="right" aria-label="Вправо">▶</button>
-    </div>
-
-    <div class="runner-actions">
-      <button class="ghost-btn" id="runnerPauseBtn">⏸ Пауза</button>
-      <button class="ghost-btn" id="runnerQuitBtn">В меню</button>
-    </div>
-
+  <!-- ================= РАННЕР 3D ================= -->
+  <main id="screen-runner" class="screen screen-runner3d">
+    <iframe id="runner3dFrame" src="runner3d.html?v=20261122a" title="Побег по крышам — 3D" allow="fullscreen"></iframe>
     <p class="hint runner-note">
-      Все собранные монеты автоматически переводятся на баланс. Если выйдешь с экрана или свернёшь Telegram,
-      забег встанет на паузу, а заработок сохранится.
+      Монеты автоматически переводятся на баланс. Свайпы: влево/вправо — полоса, вверх — прыжок, вниз — подкат.
     </p>
   </main>
 
@@ -613,18 +570,18 @@
   </div>
 </div>
 
-<script src="js/sound.js?v=20261111b"></script>
-<script src="js/cloud.js?v=20261111b"></script>
-<script src="js/app.js?v=20261111b"></script>
-<script src="js/privacy.js?v=20261111b"></script>
-<script src="js/slots.js?v=20261111b"></script>
-<script src="js/roulette.js?v=20261111b"></script>
-<script src="js/blackjack.js?v=20261111b"></script>
-<script src="js/poker.js?v=20261111b"></script>
-<script src="js/esports.js?v=20261111b"></script>
-<script src="js/bank.js?v=20261111b"></script>
-<script src="js/promo.js?v=20261111b"></script>
-<script src="js/admin.js?v=20261111b"></script>
-<script src="js/runner.js?v=20261111b"></script>
+<script src="js/sound.js?v=20261122a"></script>
+<script src="js/cloud.js?v=20261122a"></script>
+<script src="js/app.js?v=20261122a"></script>
+<script src="js/privacy.js?v=20261122a"></script>
+<script src="js/slots.js?v=20261122a"></script>
+<script src="js/roulette.js?v=20261122a"></script>
+<script src="js/blackjack.js?v=20261122a"></script>
+<script src="js/poker.js?v=20261122a"></script>
+<script src="js/esports.js?v=20261122a"></script>
+<script src="js/bank.js?v=20261122a"></script>
+<script src="js/promo.js?v=20261122a"></script>
+<script src="js/admin.js?v=20261122a"></script>
+<script src="js/runner.js?v=20261122a"></script>
 </body>
 </html>
