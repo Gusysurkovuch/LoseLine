@@ -42,7 +42,7 @@
     display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
     gap:clamp(4px,1.4vw,8px);
     padding:clamp(6px,2vw,12px) clamp(6px,2vw,12px) 0; pointer-events:none;
-    transform:translateY(4px); /* счётчик тугриков чуть ниже */
+    transform:translateY(20px); /* счётчик тугриков опущен на 20px */
   }
   .stat{
     min-width:0; padding:clamp(5px,1.6vw,8px) clamp(3px,1vw,5px); text-align:center; border-radius:12px;
@@ -59,7 +59,7 @@
   .stat.hot b{color:#38e8ff; text-shadow:0 0 12px rgba(56,232,255,.6)}
 
   .badge{
-    position:absolute; top:clamp(56px,10vw,70px); right:clamp(6px,2vw,12px); z-index:4; pointer-events:none;
+    position:absolute; top:calc(clamp(56px,10vw,70px) + 20px); right:clamp(6px,2vw,12px); z-index:4; pointer-events:none;
     padding:clamp(5px,1.5vw,7px) clamp(8px,2.5vw,12px); border-radius:999px;
     font-size:clamp(10px,3vw,13px); font-weight:800;
     color:#7de9ff; background:rgba(5,14,28,.86); border:1px solid rgba(56,232,255,.6);
@@ -125,7 +125,7 @@
   .ctrl:active{transform:scale(.94); background:rgba(58,42,100,.9)}
 
   .pausebtn,.exitbtn{
-    position:absolute; top:clamp(56px,10vw,70px); z-index:5;
+    position:absolute; top:calc(clamp(56px,10vw,70px) + 20px); z-index:5;
     width:clamp(34px,9.5vw,40px); height:clamp(30px,8.5vw,36px); border-radius:11px;
     cursor:pointer; touch-action:manipulation;
     border:1px solid rgba(140,110,220,.45); background:rgba(18,14,36,.82); color:#c9bff0;
@@ -139,10 +139,10 @@
   }
   /* Альбомный режим телефона:everything остаётся на экране. */
   @media (orientation:landscape) and (max-height:520px){
-    .hud{gap:4px; padding-top:5px; transform:translateY(2px)}
+    .hud{gap:4px; padding-top:5px; transform:translateY(20px)}
     .stat span{font-size:6.5px}
     .stat b{font-size:11px}
-    .badge,.pausebtn,.exitbtn{top:48px}
+    .badge,.pausebtn,.exitbtn{top:70px}
     .card{padding:12px 14px}
     .card h1{font-size:15px; margin:6px 0 4px}
     .card p{font-size:10px; margin-bottom:8px}
