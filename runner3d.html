@@ -42,6 +42,7 @@
     display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
     gap:clamp(4px,1.4vw,8px);
     padding:clamp(6px,2vw,12px) clamp(6px,2vw,12px) 0; pointer-events:none;
+    transform:translateY(4px); /* счётчик тугриков чуть ниже */
   }
   .stat{
     min-width:0; padding:clamp(5px,1.6vw,8px) clamp(3px,1vw,5px); text-align:center; border-radius:12px;
@@ -138,7 +139,7 @@
   }
   /* Альбомный режим телефона:everything остаётся на экране. */
   @media (orientation:landscape) and (max-height:520px){
-    .hud{gap:4px; padding-top:5px}
+    .hud{gap:4px; padding-top:5px; transform:translateY(2px)}
     .stat span{font-size:6.5px}
     .stat b{font-size:11px}
     .badge,.pausebtn,.exitbtn{top:48px}
