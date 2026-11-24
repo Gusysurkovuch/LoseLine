@@ -610,6 +610,9 @@ function collectCoin() {
   state.coins++;
   state.score += 120 * state.mult;
   beep(880, 0.08, 'sine', 0.045);
+  // Зачисляем каждую монету сразу: даже если забег оборвётся,
+  // монеты уже будут в очереди на баланс.
+  flush();
 }
 
 function collectPower(mult) {
@@ -959,6 +962,9 @@ window.addEventListener('keydown', (e) => {
 document.addEventListener('contextmenu', (e) => e.preventDefault());
 document.addEventListener('selectstart', (e) => e.preventDefault());
 document.addEventListener('visibilitychange', () => { if (document.hidden) pauseRun(); });
+// Закрытие вкладки / выход из WebView тоже должны забрать собранные монеты.
+window.addEventListener('pagehide', () => { flush(); });
+window.addEventListener('beforeunload', () => { flush(); });
 
 window.addEventListener('message', (e) => {
   const d = e.data || {};

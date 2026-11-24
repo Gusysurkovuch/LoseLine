@@ -11,7 +11,7 @@
 <script>
 /* Telegram кеширует Mini App по URL — принудительно обновляем версию. */
 (function () {
-  var V = '20261124b';
+  var V = '20261124c';
   try {
     var u = new URL(location.href);
     if (u.searchParams.get('v') !== V) {
@@ -26,11 +26,18 @@
 })();
 </script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
-<link rel="stylesheet" href="css/style.css?v=20261124b">
+<link rel="stylesheet" href="css/style.css?v=20261124c">
 <!-- Критичные правила fullscreen лежат прямо в HTML: внешний CSS может
      закешироваться Telegram, а игра всё равно должна занимать весь экран. -->
 <style id="runner-critical-css">
-  html,body{max-width:100%;overflow-x:hidden;overscroll-behavior:none}
+  /* Скролл страницы разрешён ВЕЗДЕ, кроме активного раннера.
+     overflow-x:clip не создаёт контейнер прокрутки, в отличие от hidden. */
+  html,body{
+    max-width:100%;
+    overflow-x:hidden; overflow-x:clip;
+    overflow-y:auto; -webkit-overflow-scrolling:touch;
+    touch-action:auto;
+  }
   #screen-runner{
     position:fixed !important; inset:0 !important; left:0 !important; top:0 !important;
     right:0 !important; bottom:0 !important;
@@ -408,7 +415,7 @@
 
   <!-- ================= РАННЕР 3D ================= -->
   <main id="screen-runner" class="screen screen-runner3d">
-    <iframe id="runner3dFrame" src="runner3d.html?v=20261124b" title="Побег по крышам — 3D" allow="fullscreen"></iframe>
+    <iframe id="runner3dFrame" src="runner3d.html?v=20261124c" title="Побег по крышам — 3D" allow="fullscreen"></iframe>
     <p class="hint runner-note">
       Монеты автоматически переводятся на баланс. Свайпы: влево/вправо — полоса, вверх — прыжок, вниз — подкат.
     </p>
@@ -507,7 +514,7 @@
   </main>
 
   <footer class="footer">
-    LoseLine · игры на виртуальные тугрики · 18+ · v4FULL8
+    LoseLine · игры на виртуальные тугрики · 18+ · v4FULL9
     <br>
     <button class="link-btn footer-link" id="legalFooterBtn">Условия и конфиденциальность</button>
   </footer>
@@ -637,18 +644,18 @@
   </div>
 </div>
 
-<script src="js/sound.js?v=20261124b"></script>
-<script src="js/cloud.js?v=20261124b"></script>
-<script src="js/app.js?v=20261124b"></script>
-<script src="js/privacy.js?v=20261124b"></script>
-<script src="js/slots.js?v=20261124b"></script>
-<script src="js/roulette.js?v=20261124b"></script>
-<script src="js/blackjack.js?v=20261124b"></script>
-<script src="js/poker.js?v=20261124b"></script>
-<script src="js/esports.js?v=20261124b"></script>
-<script src="js/bank.js?v=20261124b"></script>
-<script src="js/promo.js?v=20261124b"></script>
-<script src="js/admin.js?v=20261124b"></script>
-<script src="js/runner.js?v=20261124b"></script>
+<script src="js/sound.js?v=20261124c"></script>
+<script src="js/cloud.js?v=20261124c"></script>
+<script src="js/app.js?v=20261124c"></script>
+<script src="js/privacy.js?v=20261124c"></script>
+<script src="js/slots.js?v=20261124c"></script>
+<script src="js/roulette.js?v=20261124c"></script>
+<script src="js/blackjack.js?v=20261124c"></script>
+<script src="js/poker.js?v=20261124c"></script>
+<script src="js/esports.js?v=20261124c"></script>
+<script src="js/bank.js?v=20261124c"></script>
+<script src="js/promo.js?v=20261124c"></script>
+<script src="js/admin.js?v=20261124c"></script>
+<script src="js/runner.js?v=20261124c"></script>
 </body>
 </html>
