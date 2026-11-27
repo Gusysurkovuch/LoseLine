@@ -39,7 +39,7 @@
 
   .hud{
     position:absolute; top:0; left:0; right:0; z-index:4;
-    display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+    display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
     gap:clamp(4px,1.4vw,8px);
     padding:clamp(6px,2vw,12px) clamp(6px,2vw,12px) 0; pointer-events:none;
     transform:translateY(20px); /* счётчик тугриков опущен на 20px */
@@ -125,7 +125,7 @@
   .ctrl:active{transform:scale(.94); background:rgba(58,42,100,.9)}
 
   .pausebtn,.exitbtn{
-    position:absolute; top:calc(clamp(56px,10vw,70px) + 20px); z-index:5;
+    position:absolute; top:calc(clamp(56px,10vw,70px) + 20px); z-index:7;
     width:clamp(34px,9.5vw,40px); height:clamp(30px,8.5vw,36px); border-radius:11px;
     cursor:pointer; touch-action:manipulation;
     border:1px solid rgba(140,110,220,.45); background:rgba(18,14,36,.82); color:#c9bff0;
@@ -137,7 +137,7 @@
   @media (hover:none) and (pointer:coarse){
     .controls{display:none}
   }
-  /* Альбомный режим телефона:everything остаётся на экране. */
+  /* Альбомный режим телефона: всё остаётся на экране. */
   @media (orientation:landscape) and (max-height:520px){
     .hud{gap:4px; padding-top:5px; transform:translateY(20px)}
     .stat span{font-size:6.5px}
@@ -162,6 +162,7 @@
     <div class="stat"><span>СЧЁТ</span><b id="score">0</b></div>
     <div class="stat"><span>ДИСТАНЦИЯ</span><b id="dist">0 м</b></div>
     <div class="stat"><span>ТУГРИКИ</span><b id="earn">0</b></div>
+    <div class="stat hot"><span>БАЛАНС</span><b id="hudBalance">0</b></div>
   </div>
 
   <div class="badge hidden" id="badge">×2 <i>0.0 с</i></div>
@@ -635,7 +636,8 @@ function crash() {
   $('title').textContent = 'КОНЕЦ ЗАБЕГА';
   $('text').innerHTML = 'Счёт <b>' + fmt(state.score) + '</b> · рекорд <b>' + fmt(state.best) + '</b><br>Собрано монет: ' + state.coins + ' · заработано <b>' + fmt(state.earned) + ' 🪙</b>';
   $('primary').textContent = 'ЕЩЁ РАЗ';
-  $('resume').classList.add('hidden');
+  $('resume').textContent = 'В МЕНЮ';
+  $('resume').classList.remove('hidden');
   $('overlay').classList.remove('hidden');
   updateHud();
 }
@@ -672,6 +674,7 @@ function startRun() {
   for (let i = 0; i < 3; i++) spawnRow();
   $('overlay').classList.add('hidden');
   $('primary').textContent = 'НАЧАТЬ БЕГ';
+  $('resume').classList.add('hidden');
   updateHud();
 }
 
@@ -683,6 +686,7 @@ function pauseRun() {
   $('title').textContent = 'ПАУЗА';
   $('text').innerHTML = 'Счёт <b>' + fmt(state.score) + '</b> · дистанция <b>' + fmt(state.distance) + ' м</b><br>Все собранные тугрики уже переведены на баланс.';
   $('primary').textContent = 'НАЧАТЬ ЗАНОВО';
+  $('resume').textContent = 'ПРОДОЛЖИТЬ';
   $('resume').classList.remove('hidden');
   $('overlay').classList.remove('hidden');
 }
@@ -857,13 +861,18 @@ document.querySelectorAll('.ctrl').forEach((b) => {
   b.addEventListener('click', (e) => { e.preventDefault(); act(b.dataset.act); });
 });
 $('primary').addEventListener('click', (e) => { e.preventDefault(); startRun(); });
-$('resume').addEventListener('click', (e) => { e.preventDefault(); resumeRun(); });
-$('pauseBtn').addEventListener('click', (e) => { e.preventDefault(); pauseRun(); });
-$('exitBtn').addEventListener('click', (e) => {
+$('resume').addEventListener('click', (e) => {
   e.preventDefault();
+  if (state.mode === 'over') exitToMenu();
+  else resumeRun();
+});
+$('pauseBtn').addEventListener('click', (e) => { e.preventDefault(); pauseRun(); });
+$('exitBtn').addEventListener('click', (e) => { e.preventDefault(); exitToMenu(); });
+
+function exitToMenu() {
   flush();
   toParent('exit');
-});
+}
 
 /* Универсальный жест: мышь, перо и тач. Слушаем ВСЮ игровую область,
    а не только canvas, и захватываем указатель, чтобы отпускание за
@@ -969,6 +978,10 @@ window.addEventListener('beforeunload', () => { flush(); });
 window.addEventListener('message', (e) => {
   const d = e.data || {};
   if (typeof d.type !== 'string' || d.type.indexOf(MSG) !== 0) return;
+  if (d.type === MSG + 'balance') {
+    const el = $('hudBalance');
+    if (el) el.textContent = fmt(d.value);
+  }
   if (d.type === MSG + 'pause') pauseRun();
   if (d.type === MSG + 'activate') {
     last = performance.now();
